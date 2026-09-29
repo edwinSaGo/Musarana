@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { juegos } from '../../data/juegos.js';
+---
+<Layout title="Juegos">
+  <section class="contenedor seccion">
+    <p class="eyebrow">Musaraña Play</p>
+    <h1><span class="misprint" data-text="JUEGOS">JUEGOS</span></h1>
+
+    {juegos.length === 0 ? (
+      <p class="proximamente">Muy pronto vas a poder jugar aquí. Estamos preparando algo. 👾</p>
+    ) : (
+      <div class="grilla-experiencias">
+        {juegos.map(j => (
+          <a href={j.disponible ? j.url : '#'} class:list={['tarjeta-experiencia', { deshabilitada: !j.disponible }]}>
+            {j.imagen && <img src={j.imagen} alt={j.titulo} />}
+            <h3>{j.titulo}</h3>
+            <p>{j.descripcion}</p>
+            {!j.disponible && <span class="badge-proximamente">Próximamente</span>}
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</Layout>
+
+<style>
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; }
+  .proximamente { font-size: 1.1rem; margin-top: 1.5rem; }
+  .grilla-experiencias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .tarjeta-experiencia {
+    border: var(--grosor-borde) solid var(--color-borde);
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .tarjeta-experiencia img { aspect-ratio: 1/1; object-fit: cover; margin-bottom: 0.6rem; }
+  .tarjeta-experiencia.deshabilitada { opacity: 0.5; pointer-events: none; }
+  .badge-proximamente {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    background: var(--color-acento-3);
+    font-size: 0.7rem;
+    padding: 0.3em 0.6em;
+    font-family: var(--font-display);
+  }
+</style>

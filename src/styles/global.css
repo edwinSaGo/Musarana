@@ -1,0 +1,278 @@
+/* =========================================================================
+   MUSARAÑA — DESIGN TOKENS
+   Edita AQUÍ tus colores y tipografías reales cuando los tengas definidos.
+   Todo el sitio usa estas variables, así que cambiarlas aquí actualiza todo.
+   ========================================================================= */
+:root {
+  /* --- Colores de marca (placeholders CMYK puros, reemplaza por los reales) --- */
+  --color-cian:    #00FFFF;
+  --color-magenta: #FF00FF;
+  --color-amarillo:#FFFF00;
+  --color-negro:   #000000;
+  --color-blanco:  #FFFFFF;
+
+  /* Roles semánticos (cambia el mapeo si tu identidad final usa otros colores) */
+  --color-fondo:        var(--color-blanco);
+  --color-texto:        var(--color-negro);
+  --color-acento-1:     var(--color-cian);
+  --color-acento-2:     var(--color-magenta);
+  --color-acento-3:     var(--color-amarillo);
+  --color-borde:        var(--color-negro);
+
+  /* --- Tipografía --- */
+  --font-display: 'Archivo Black', 'Arial Black', sans-serif;
+  --font-mono:    'Space Mono', 'Courier New', monospace;
+
+  /* --- Layout --- */
+  --radio-borde: 0px; /* screen-print / stencil: sin bordes redondeados */
+  --grosor-borde: 3px;
+  --espaciado-seccion: clamp(2.5rem, 6vw, 6rem);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+}
+
+a { color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+button {
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+/* Foco visible accesible (no lo quitamos nunca) */
+:focus-visible {
+  outline: 3px solid var(--color-acento-2);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================================
+   TEXTURA DE TRAMA (halftone) — fondo sutil que evoca impresión serigráfica
+   ========================================================================= */
+.textura-trama {
+  background-image: radial-gradient(var(--color-negro) 1px, transparent 1.5px);
+  background-size: 10px 10px;
+  opacity: 0.06;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* =========================================================================
+   ELEMENTO DE FIRMA: efecto de "desregistro de tinta" (misprint)
+   Simula una impresión serigráfica donde las capas de color quedaron
+   ligeramente desalineadas respecto al negro — la esencia de "musaraña"
+   como término de serigrafía.
+   Uso: <span class="misprint" data-text="MUSARAÑA">MUSARAÑA</span>
+   ========================================================================= */
+.misprint {
+  position: relative;
+  display: inline-block;
+  color: var(--color-negro);
+}
+.misprint::before,
+.misprint::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  mix-blend-mode: multiply;
+}
+.misprint::before {
+  color: var(--color-acento-1);
+  transform: translate(-0.06em, 0.045em);
+}
+.misprint::after {
+  color: var(--color-acento-2);
+  transform: translate(0.06em, -0.045em);
+}
+
+/* =========================================================================
+   BOTONES
+   ========================================================================= */
+.btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 0.9em 1.6em;
+  border: var(--grosor-borde) solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  background: var(--color-blanco);
+  color: var(--color-negro);
+  transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
+}
+.btn:hover {
+  background: var(--color-negro);
+  color: var(--color-blanco);
+  transform: translate(-2px, -2px);
+}
+.btn-acento {
+  background: var(--color-acento-3);
+}
+.btn-acento:hover {
+  background: var(--color-negro);
+  color: var(--color-acento-3);
+}
+
+.tarjeta {
+  border: var(--grosor-borde) solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  background: var(--color-blanco);
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+@media (max-width: 400px) {
+  .contenedor { padding: 0 1rem; }
+}
+
+/* Efecto de desregistro solo visible al pasar el mouse (tarjetas de producto) */
+.misprint-hover::before,
+.misprint-hover::after {
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.ficha-producto:hover .misprint-hover::before,
+.ficha-producto:hover .misprint-hover::after {
+  opacity: 1;
+}
+
+/* =========================================================================
+   MODAL DE UPSELLS
+   ========================================================================= */
+.modal-caja {
+  background: var(--color-blanco);
+  border: var(--grosor-borde) solid var(--color-borde);
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+}
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.modal-item {
+  border: 2px solid var(--color-borde);
+  padding: 0.8rem;
+  text-align: center;
+}
+.modal-item img { aspect-ratio: 1/1; object-fit: cover; margin: 0 auto 0.5rem; }
+.modal-item-nombre { font-size: 0.85rem; margin: 0.3em 0; }
+.modal-item-precio { font-family: var(--font-display); }
+.precio-tachado { text-decoration: line-through; opacity: 0.5; font-family: var(--font-mono); font-size: 0.8em; }
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+.stepper button {
+  width: 2em; height: 2em;
+  border: 2px solid var(--color-borde);
+  background: var(--color-blanco);
+  font-size: 1rem;
+}
+.modal-acciones { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.modal-tallas-caja { max-width: 480px; }
+.tabla-tallas-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tabla-tallas {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.tabla-tallas th, .tabla-tallas td {
+  border: 2px solid var(--color-borde);
+  padding: 0.5em 0.7em;
+  text-align: center;
+  white-space: nowrap;
+}
+.tabla-tallas th { background: var(--color-negro); color: var(--color-blanco); font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; }
+
+@media (max-width: 480px) {
+  .modal-caja { padding: 1.25rem; max-height: 85vh; }
+  .modal-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.7rem; }
+  .stepper button { width: 2.6em; height: 2.6em; font-size: 1.1rem; }
+}
+
+/* =========================================================================
+   FILAS DE CARRITO
+   ========================================================================= */
+.fila-carrito {
+  display: grid;
+  grid-template-columns: 70px 1fr auto auto;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 2px solid var(--color-borde);
+  padding: 1rem 0;
+}
+.fila-carrito img { width: 70px; height: 70px; object-fit: cover; }
+.fila-info p { margin: 0.1em 0; }
+.fila-quitar {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  font-size: 0.8rem;
+  min-height: 44px;
+  padding: 0 0.4rem;
+}
+@media (max-width: 480px) {
+  .fila-carrito { grid-template-columns: 56px 1fr; row-gap: 0.5rem; }
+  .fila-carrito img { width: 56px; height: 56px; }
+  .fila-carrito .stepper,
+  .fila-carrito .fila-quitar {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .fila-carrito .stepper { justify-content: flex-start; }
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  border-bottom: 2px solid var(--color-acento-3);
+  display: inline-block;
+  padding-bottom: 2px;
+}

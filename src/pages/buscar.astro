@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCatalogo } from '../lib/catalogo.js';
+
+const catalogo = await getCatalogo();
+const tallasUnicas = [...new Set(
+  catalogo.productos.flatMap(p => (p.variantes || []).map(v => v.talla).filter(Boolean))
+)];
+---
+<Layout title="Buscar">
+  <section class="contenedor seccion">
+    <h1>Buscar</h1>
+
+    <div class="filtros">
+      <input type="text" id="filtro-texto" placeholder="Buscar por nombre o palabra clave..." />
+
+      <select id="filtro-categoria">
+        <option value="">Todas las categorías</option>
+        {catalogo.categorias.map(cat => (
+          <option value={cat.id}>{cat.nombre}</option>
+        ))}
+      </select>
+
+      {tallasUnicas.length > 0 && (
+        <select id="filtro-talla">
+          <option value="">Todas las tallas</option>
+          {tallasUnicas.map(t => <option value={t}>{t}</option>)}
+        </select>
+      )}
+    </div>
+
+    <p id="contador-resultados" class="contador-resultados"></p>
+
+    <div class="grilla" id="grilla-resultados">
+      {catalogo.productos.map(p => <ProductCard producto={p} />)}
+    </div>
+    <p id="sin-resultados" class="sin-resultados" hidden>No encontramos productos con esos filtros.</p>
+  </section>
+
+  <script>
+    import '../scripts/buscar.js';
+  </script>
+</Layout>
+
+<style>
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; }
+  .filtros {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+  }
+  .filtros input, .filtros select {
+    font-family: var(--font-mono);
+    padding: 0.7em 1em;
+    border: var(--grosor-borde) solid var(--color-borde);
+    background: var(--color-blanco);
+  }
+  #filtro-texto { flex: 1; min-width: 220px; }
+  .contador-resultados { font-size: 0.85rem; opacity: 0.7; margin-bottom: 1rem; }
+  .grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  .sin-resultados { margin-top: 2rem; }
+</style>

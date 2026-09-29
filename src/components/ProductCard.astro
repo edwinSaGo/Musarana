@@ -1,0 +1,65 @@
+---
+interface Props {
+  producto: import('../lib/catalogo.js').Producto;
+}
+const { producto } = Astro.props as Props;
+const imagen = producto.imagenes?.[0] || '';
+const agotado = !producto.tiene_variantes && producto.stock_disponible === 0;
+const tallas = [...new Set(producto.variantes?.map(v => v.talla).filter(Boolean) || [])];
+---
+<a
+  href={`/producto/${producto.slug}/`}
+  class="tarjeta ficha-producto"
+  data-nombre={producto.nombre.toLowerCase()}
+  data-descripcion={(producto.descripcion || '').toLowerCase()}
+  data-categorias={producto.categorias.join(',')}
+  data-tallas={tallas.join(',')}
+>
+
+  <div class="ficha-imagen">
+    {imagen && <img src={imagen} alt={producto.nombre} loading="lazy" />}
+    {agotado && <span class="badge-agotado">AGOTADO</span>}
+    {producto.destacado && <span class="badge-destacado">★</span>}
+  </div>
+  <div class="ficha-info">
+    <h3><span class="misprint misprint-hover" data-text={producto.nombre}>{producto.nombre}</span></h3>
+    <p class="ficha-precio">${Number(producto.precio_base).toLocaleString('es-CO')} COP</p>
+  </div>
+</a>
+
+<style>
+  .ficha-producto {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    overflow: hidden;
+  }
+  .ficha-producto:hover { transform: translate(-2px, -2px); }
+  .ficha-imagen {
+    aspect-ratio: 1 / 1;
+    background: var(--color-fondo);
+    position: relative;
+    border-bottom: var(--grosor-borde) solid var(--color-borde);
+    overflow: hidden;
+  }
+  .ficha-imagen img { width: 100%; height: 100%; object-fit: cover; }
+  .badge-agotado {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: var(--color-negro);
+    color: var(--color-blanco);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    padding: 0.3em 0.6em;
+  }
+  .badge-destacado {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--color-acento-3);
+    padding: 0.2em 0.5em;
+  }
+  .ficha-info { padding: 0.9rem 1rem; }
+  .ficha-precio { font-weight: 700; margin: 0.25em 0 0; }
+</style>

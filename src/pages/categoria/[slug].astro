@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCatalogo } from '../../lib/catalogo.js';
+
+export async function getStaticPaths() {
+  const catalogo = await getCatalogo();
+  return catalogo.categorias.map(cat => ({
+    params: { slug: cat.slug },
+    props: { categoria: cat, catalogo },
+  }));
+}
+
+const { categoria, catalogo } = Astro.props;
+const productos = catalogo.productos.filter(p => p.categorias.includes(categoria.id));
+---
+<Layout title={categoria.nombre}>
+  <section class="contenedor seccion">
+    <p class="eyebrow">Categoría</p>
+    <h1>{categoria.nombre}</h1>
+    {categoria.descripcion && <p>{categoria.descripcion}</p>}
+
+    <div class="grilla">
+      {productos.map(p => <ProductCard producto={p} />)}
+    </div>
+    {productos.length === 0 && <p>Aún no hay productos activos en esta categoría.</p>}
+  </section>
+</Layout>
+
+<style>
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; }
+  .grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { experienciasAR } from '../../data/experienciasAR.js';
+
+export async function getStaticPaths() {
+  // Genera una página por CADA experiencia, esté o no lista todavía.
+  // Así el QR impreso en un producto físico nunca deja de funcionar.
+  return experienciasAR.map(exp => ({
+    params: { slug: exp.slug },
+    props: { exp },
+  }));
+}
+
+const { exp } = Astro.props;
+---
+<Layout title={exp.titulo} descripcion={exp.descripcion}>
+  {!exp.disponible ? (
+    <section class="contenedor seccion-proximamente">
+      <p class="eyebrow">Musaraña WebAR</p>
+      <h1>{exp.titulo}</h1>
+      <p>Esta experiencia todavía se está preparando. Vuelve a escanear pronto. 🦔</p>
+      <a href="/ar/" class="btn">Ver otras experiencias</a>
+    </section>
+  ) : (
+    <>
+      {/*
+        =================================================================
+        PLANTILLA MINDAR — placeholders comentados, ajusta lo que necesites:
+        - archivoTarget y modelo3d se editan en src/data/experienciasAR.js
+        - "escala" controla el tamaño del modelo 3D sobre la imagen objetivo
+        - Puedes agregar animación, sonido, o varios modelos dentro de la
+          misma <a-entity mindar-image-target> si la experiencia lo pide.
+        =================================================================
+      */}
+      <div class="ar-instrucciones">
+        <p>📷 Apunta tu cámara a la imagen objetivo para ver la experiencia.</p>
+      </div>
+
+      <a-scene
+        mindar-image={`imageTargetSrc: ${exp.archivoTarget}; autoStart: true; uiScanning: yes; uiLoading: yes;`}
+        embedded
+        color-space="sRGB"
+        renderer="colorManagement: true; physicallyCorrectLights: true"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: true"
+      >
+        <a-assets>
+          <a-asset-item id="modelo-ar" src={exp.modelo3d}></a-asset-item>
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+          {/* Reemplaza escala/posición/rotación según tu modelo real */}
+          <a-gltf-model
+            rotation="0 0 0"
+            position="0 0 0"
+            scale={exp.escala}
+            gltf-model="#modelo-ar"
+          ></a-gltf-model>
+        </a-entity>
+      </a-scene>
+
+      <a href="/ar/" class="btn volver-flotante">← Volver</a>
+    </>
+  )}
+</Layout>
+
+{exp.disponible && (
+  <>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </>
+)}
+
+<style>
+  .seccion-proximamente {
+    padding: var(--espaciado-seccion) 1.5rem;
+    text-align: center;
+  }
+  .ar-instrucciones {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 15;
+    background: var(--color-blanco);
+    border-bottom: 2px solid var(--color-borde);
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+  a-scene { width: 100vw; height: 100vh; }
+  .volver-flotante {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 15;
+  }
+</style>

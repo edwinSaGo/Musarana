@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCatalogo } from '../lib/catalogo.js';
+
+const catalogo = await getCatalogo();
+const direccionPuntoFisico = catalogo.config?.direccion_punto_fisico || '(configura la dirección en la pestaña Config del Sheet)';
+const horarioRecogida = catalogo.config?.horario_recogida || '';
+---
+<Layout title="Carrito">
+  <section class="contenedor seccion">
+    <h1>Tu carrito</h1>
+    <div id="lista-carrito"></div>
+    <p id="total-carrito" class="total"></p>
+
+    <form id="form-checkout" class="form-checkout">
+      <label>
+        Nombre completo
+        <input type="text" id="input-nombre" required />
+      </label>
+      <label>
+        Teléfono (WhatsApp)
+        <input type="tel" id="input-telefono" required />
+      </label>
+
+      <fieldset class="grupo-entrega">
+        <legend class="eyebrow">¿Cómo quieres recibir tu pedido?</legend>
+        <label class="opcion-entrega">
+          <input type="radio" name="tipo_entrega" value="envio" checked />
+          Envío a domicilio
+        </label>
+        <label class="opcion-entrega">
+          <input type="radio" name="tipo_entrega" value="recogida" />
+          Recojo en punto físico
+        </label>
+      </fieldset>
+
+      <div id="campos-envio">
+        <label>
+          Dirección
+          <input type="text" id="input-direccion" placeholder="Calle, número, barrio" />
+        </label>
+        <label>
+          Ciudad
+          <input type="text" id="input-ciudad" />
+        </label>
+        <label>
+          Detalles adicionales (apto, torre, referencia)
+          <input type="text" id="input-detalles" />
+        </label>
+      </div>
+
+      <div id="info-recogida" hidden class="info-recogida">
+        <p><strong>📍 Punto de recogida:</strong> {direccionPuntoFisico}</p>
+        {horarioRecogida && <p><strong>🕐 Horario:</strong> {horarioRecogida}</p>}
+      </div>
+
+      <button type="submit" class="btn btn-acento">Confirmar pedido</button>
+      <p class="nota-pago">Tu pedido se reserva por tiempo limitado. Una vez confirmado, te contactamos para coordinar el pago por transferencia.</p>
+    </form>
+
+    <div id="resultado-pedido"></div>
+  </section>
+</Layout>
+
+<style>
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; max-width: 700px; margin: 0 auto; }
+  .total { font-family: var(--font-display); font-size: 1.4rem; margin: 1.5rem 0; }
+  .form-checkout { display: flex; flex-direction: column; gap: 1rem; }
+  .form-checkout label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; text-transform: uppercase; }
+  .form-checkout input {
+    font-family: var(--font-mono);
+    padding: 0.7em;
+    border: var(--grosor-borde) solid var(--color-borde);
+  }
+  .nota-pago { font-size: 0.8rem; opacity: 0.8; }
+  .grupo-entrega {
+    border: var(--grosor-borde) solid var(--color-borde);
+    padding: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .opcion-entrega { flex-direction: row !important; align-items: center; gap: 0.5rem !important; text-transform: none !important; font-size: 0.95rem !important; }
+  #campos-envio { display: flex; flex-direction: column; gap: 1rem; }
+  .info-recogida {
+    border: var(--grosor-borde) solid var(--color-borde);
+    background: var(--color-acento-3);
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  #resultado-pedido { margin-top: 1.5rem; }
+</style>

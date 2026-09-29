@@ -1,0 +1,135 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCatalogo } from '../lib/catalogo.js';
+
+
+// =========================================================================
+const HERO_VIDEO = 'https://res.cloudinary.com/dnl44q1wd/video/upload/v1785115715/bogota-fly_mkks7n.mp4';
+const HERO_POSTER = 'https://res.cloudinary.com/dnl44q1wd/image/upload/v1785116333/Poster_vid_inicial_xzrhrp.png';
+const MARQUESINA_TEXTO = '· CULTURA · REVOLUCIÓN · CRÍTICA · ARTE · MEMORIA';
+// =========================================================================
+
+const catalogo = await getCatalogo();
+const destacados = catalogo.productos.filter(p => p.destacado);
+const resto = catalogo.productos.filter(p => !p.destacado);
+---
+<Layout title="Inicio">
+  <section class="hero">
+    <video
+      class="hero-video"
+      src={HERO_VIDEO}
+      poster={HERO_POSTER}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    ></video>
+    <div class="hero-overlay"></div>
+
+    <div class="contenedor hero-inner">
+      <p class="eyebrow eyebrow-hero">Serigrafía · Arte · Insurgente +</p>
+      <h1 class="hero-titulo">
+        <span class="misprint" data-text="ELÉVATE">ELÉVATE</span><br/>
+        <span class="misprint" data-text="SOBRE EL CAOS">SOBRE EL CAOS</span>
+      </h1>
+      <p class="hero-sub">Ropa, accesorios y objetos hechos para quienes crean su propio camino.</p>
+      <a href="#catalogo" class="btn btn-acento">Ver catálogo</a>
+    </div>
+  </section>
+
+  <div class="marquesina" aria-hidden="true">
+    <div class="marquesina-track">
+      <span>{MARQUESINA_TEXTO}&nbsp;&nbsp;&nbsp;</span>
+      <span>{MARQUESINA_TEXTO}&nbsp;&nbsp;&nbsp;</span>
+      <span>{MARQUESINA_TEXTO}&nbsp;&nbsp;&nbsp;</span>
+      <span>{MARQUESINA_TEXTO}&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  {destacados.length > 0 && (
+    <section class="contenedor seccion">
+      <h2>Destacados</h2>
+      <div class="grilla">
+        {destacados.map(p => <ProductCard producto={p} />)}
+      </div>
+    </section>
+  )}
+
+  <section id="catalogo" class="contenedor seccion">
+    <h2>Todo el catálogo</h2>
+    <div class="grilla">
+      {resto.map(p => <ProductCard producto={p} />)}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    position: relative;
+    border-bottom: var(--grosor-borde) solid var(--color-borde);
+    height: 90vh;
+    min-height: 480px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+  }
+  .hero-inner { position: relative; z-index: 2; padding-bottom: 3.5rem; }
+  .hero-titulo { font-size: clamp(2.5rem, 8vw, 5rem); margin: 0.3em 0; color: var(--color-blanco); }
+  .hero-titulo .misprint { color: var(--color-blanco); }
+  .hero-titulo .misprint::before,
+  .hero-titulo .misprint::after { mix-blend-mode: screen; }
+  .eyebrow-hero { color: var(--color-blanco); border-bottom-color: var(--color-acento-1); }
+  .hero-sub { max-width: 40ch; font-size: 1.05rem; margin-bottom: 1.5rem; color: var(--color-blanco); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video { display: none; }
+    .hero { background: var(--color-negro) url('/imagenes/hero-poster.jpg') center/cover; }
+  }
+
+  .marquesina {
+    background: var(--color-negro);
+    color: var(--color-acento-3);
+    border-bottom: var(--grosor-borde) solid var(--color-borde);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0.6rem 0;
+  }
+  .marquesina-track {
+    display: inline-flex;
+    animation: marquesina-scroll 18s linear infinite;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+  @keyframes marquesina-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquesina-track { animation: none; }
+  }
+
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; }
+  .grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+</style>

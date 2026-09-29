@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { experienciasAR } from '../../data/experienciasAR.js';
+---
+<Layout title="WebAR">
+  <section class="contenedor seccion">
+    <p class="eyebrow">Musaraña WebAR</p>
+    <h1><span class="misprint" data-text="ESCANEA Y APARECE">ESCANEA Y APARECE</span></h1>
+    <p class="intro">Cada experiencia se activa escaneando un código QR o apuntando la cámara a la imagen indicada — no necesitas instalar ninguna app.</p>
+
+    <div class="grilla-experiencias">
+      {experienciasAR.map(exp => (
+        <a href={`/ar/${exp.slug}/`} class:list={['tarjeta-experiencia', { deshabilitada: !exp.disponible }]}>
+          {exp.imagenPreview && <img src={exp.imagenPreview} alt={exp.titulo} />}
+          <h3>{exp.titulo}</h3>
+          <p>{exp.descripcion}</p>
+          {!exp.disponible && <span class="badge-proximamente">Próximamente</span>}
+        </a>
+      ))}
+    </div>
+    {experienciasAR.length === 0 && <p class="proximamente">Aún no hay experiencias configuradas.</p>}
+  </section>
+</Layout>
+
+<style>
+  .seccion { padding: var(--espaciado-seccion) 1.5rem; }
+  .intro { max-width: 60ch; margin: 1rem 0 2rem; }
+  .grilla-experiencias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  .tarjeta-experiencia {
+    border: var(--grosor-borde) solid var(--color-borde);
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .tarjeta-experiencia img { aspect-ratio: 1/1; object-fit: cover; margin-bottom: 0.6rem; }
+  .tarjeta-experiencia.deshabilitada { opacity: 0.5; pointer-events: none; }
+  .badge-proximamente {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    background: var(--color-acento-3);
+    font-size: 0.7rem;
+    padding: 0.3em 0.6em;
+    font-family: var(--font-display);
+  }
+  .proximamente { margin-top: 1.5rem; }
+</style>

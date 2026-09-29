@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCatalogo } from '../../lib/catalogo.js';
+
+export async function getStaticPaths() {
+  const catalogo = await getCatalogo();
+  return catalogo.productos.map(p => ({
+    params: { slug: p.slug },
+    props: { producto: p },
+  }));
+}
+
+const { producto } = Astro.props;
+
+// Tallas y colores únicos disponibles (si tiene variantes)
+const tallas = [...new Set(producto.variantes.map(v => v.talla).filter(Boolean))];
+const colores = [...new Set(producto.variantes.map(v => v.color).filter(Boolean))];
+---
+<Layout title={producto.nombre} descripcion={producto.descripcion}>
+  <section class="contenedor producto-detalle">
+    <div class="galeria">
+      <div class="galeria-principal">
+        <img id="imagen-principal" src={producto.imagenes[0]} alt={producto.nombre} />
+      </div>
+      <div class="galeria-miniaturas">
+        {producto.imagenes.map((url, i) => (
+          <button class="miniatura" data-src={url} aria-label={`Ver imagen ${i + 1}`}>
+            <img src={url} alt="" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="info-producto">
+      <p class="eyebrow">Musaraña</p>
+      <h1>{producto.nombre}</h1>
+      <p class="precio" id="precio-mostrado">${Number(producto.precio_base).toLocaleString('es-CO')} COP</p>
+      <p class="descripcion">{producto.descripcion}</p>
+
+      {producto.tiene_variantes && (
+        <div class="selector-variantes">
+          {tallas.length > 0 && (
+            <div class="grupo-opcion">
+              <span class="eyebrow">Talla</span>
+              <div class="opciones">
+                {tallas.map(t => <button class="opcion-btn" data-tipo="talla" data-valor={t}>{t}</button>)}
+              </div>
+            </div>
+          )}
+          {colores.length > 0 && (
+            <div class="grupo-opcion">
+              <span class="eyebrow">Color</span>
+              <div class="opciones">
+                {colores.map(c => <button class="opcion-btn" data-tipo="color" data-valor={c}>{c}</button>)}
+              </div>
+            </div>
+          )}
+          <p id="mensaje-variante" class="mensaje-variante"></p>
+        </div>
+      )}
+
+      {producto.guia_tallas && producto.guia_tallas.length > 0 && (
+        <button id="btn-guia-tallas" class="btn-guia-tallas" type="button">📏 Ver guía de tallas</button>
+      )}
+
+      <button id="btn-agregar-carrito" class="btn btn-acento btn-grande">Añadir al carrito</button>
+      <p id="mensaje-stock" class="mensaje-stock"></p>
+    </div>
+  </section>
+
+  <script type="application/json" id="producto-data" set:html={JSON.stringify(producto)} />
+</Layout>
+
+
+<style>
+  .producto-detalle {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 3rem;
+    padding: var(--espaciado-seccion) 1.5rem;
+  }
+  @media (max-width: 800px) {
+    .producto-detalle { grid-template-columns: 1fr; }
+  }
+  .galeria-principal {
+    border: var(--grosor-borde) solid var(--color-borde);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+  .galeria-principal img { width: 100%; height: 100%; object-fit: cover; }
+  .galeria-miniaturas {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .miniatura {
+    width: 70px;
+    height: 70px;
+    padding: 0;
+    border: 2px solid var(--color-borde);
+    background: none;
+    overflow: hidden;
+  }
+  .miniatura img { width: 100%; height: 100%; object-fit: cover; }
+  .miniatura.activa { outline: 3px solid var(--color-acento-1); }
+
+  .precio { font-family: var(--font-display); font-size: 1.8rem; margin: 0.3em 0; }
+  .descripcion { margin-bottom: 1.5rem; }
+  .grupo-opcion { margin-bottom: 1rem; }
+  .opciones { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.4rem; }
+  .opcion-btn {
+    border: 2px solid var(--color-borde);
+    background: var(--color-blanco);
+    padding: 0.4em 0.9em;
+    font-family: var(--font-mono);
+  }
+  .opcion-btn.seleccionada { background: var(--color-negro); color: var(--color-blanco); }
+  .btn-grande { width: 100%; margin-top: 1rem; font-size: 1rem; }
+  .btn-guia-tallas {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0;
+    margin-top: 0.6rem;
+    display: block;
+  }
+  .mensaje-variante, .mensaje-stock { font-size: 0.85rem; margin-top: 0.5rem; }
+</style>
