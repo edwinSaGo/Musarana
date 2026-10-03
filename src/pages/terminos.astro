@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// =========================================================================
+// EDITA AQUÍ los datos específicos de tu negocio.
+// =========================================================================
+const NOMBRE_NEGOCIO = 'Musaraña';
+const CIUDAD = 'Bogotá, Colombia';
+const CORREO_CONTACTO = 'tu-correo@ejemplo.com'; // reemplaza por tu correo real
+const MINUTOS_RESERVA = 30; // debe coincidir con minutos_reserva_stock en la pestaña Config del Sheet
+// =========================================================================
+---
+<Layout title="Términos y condiciones">
+  <section class="contenedor seccion-texto">
+    <p class="eyebrow">{NOMBRE_NEGOCIO}</p>
+    <h1>Términos y condiciones</h1>
+    <p class="nota-editable">⚠️ Plantilla de referencia — ajusta los valores editables arriba y considera que un profesional revise el texto antes de publicarlo.</p>
+
+    <h2>1. Aceptación de los términos</h2>
+    <p>
+      Al realizar un pedido en este sitio, aceptas los términos descritos aquí, junto con nuestra
+      <a href="/privacidad/">Política de privacidad</a> y nuestra
+      <a href="/devoluciones/">Política de devoluciones y cambios</a>.
+    </p>
+
+    <h2>2. Quiénes somos</h2>
+    <p>{NOMBRE_NEGOCIO} es una tienda con sede en {CIUDAD}. Puedes contactarnos en cualquier momento a través de los medios listados en nuestra página de <a href="/contacto/">Contacto</a>.</p>
+
+    <h2>3. Productos y precios</h2>
+    <p>
+      Los precios mostrados están en pesos colombianos (COP) e incluyen los impuestos aplicables.
+      Nos reservamos el derecho de corregir errores de precio o descripción, y de modificar el
+      catálogo sin previo aviso.
+    </p>
+
+    <h2>4. Proceso de compra y pago</h2>
+    <p>
+      El pago se realiza por transferencia o consignación manual, coordinada directamente contigo
+      después de enviar tu pedido. Al confirmar un pedido, el stock queda reservado por
+      <strong> {MINUTOS_RESERVA} minutos</strong>; si no recibimos el pago dentro de ese plazo, la
+      reserva se libera automáticamente y el pedido queda marcado como expirado.
+    </p>
+    <p>
+      La venta se considera completada únicamente cuando confirmamos haber recibido tu pago.
+    </p>
+
+    <h2>5. Envío y recogida</h2>
+    <p>
+      Puedes elegir recibir tu pedido por envío a domicilio (con costos y tiempos coordinados
+      directamente por WhatsApp) o recogerlo en nuestro punto físico, según la información
+      publicada en el carrito y en <a href="/contacto/">Contacto</a>.
+    </p>
+
+    <h2>6. Propiedad intelectual</h2>
+    <p>
+      Los diseños, logotipos, textos e imágenes de este sitio son propiedad de {NOMBRE_NEGOCIO} y
+      no pueden reproducirse sin autorización.
+    </p>
+
+    <h2>7. Limitación de responsabilidad</h2>
+    <p>
+      Hacemos todo lo posible para que la información del sitio sea precisa, pero no garantizamos
+      que esté libre de errores en todo momento. No somos responsables por retrasos causados por
+      transportadoras externas una vez el pedido sale de nuestras manos.
+    </p>
+
+    <h2>8. Ley aplicable</h2>
+    <p>
+      Estos términos se rigen por las leyes de la República de Colombia, incluyendo la Ley 1480 de
+      2011 (Estatuto del Consumidor).
+    </p>
+
+    <h2>9. Cambios a estos términos</h2>
+    <p>
+      Podemos actualizar estos términos en cualquier momento; la versión vigente es siempre la
+      publicada en esta página.
+    </p>
+
+    <h2>10. Contacto</h2>
+    <p>
+      ¿Dudas sobre estos términos? Escríbenos a
+      <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .seccion-texto { padding: var(--espaciado-seccion) 1.5rem; max-width: 760px; margin: 0 auto; }
+  .nota-editable {
+    background: var(--color-acento-3);
+    border: 2px solid var(--color-borde);
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    margin: 1rem 0 2rem;
+  }
+  h2 { margin-top: 2rem; }
+</style>
