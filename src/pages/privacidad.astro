@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// =========================================================================
+const CORREO_CONTACTO = 'tu-correo@ejemplo.com'; // reemplaza por tu correo real
+// =========================================================================
+---
+<Layout title="Política de privacidad">
+  <section class="contenedor seccion-texto">
+    <p class="eyebrow">Musaraña</p>
+    <h1>Política de privacidad</h1>
+    <p class="nota-editable">⚠️ Plantilla de referencia — revisa y ajusta antes de publicar.</p>
+
+    <h2>Qué información recopilamos</h2>
+    <p>Cuando haces un pedido, recopilamos: nombre completo, número de teléfono, y si elegiste envío, tu dirección y ciudad.</p>
+
+    <h2>Para qué la usamos</h2>
+    <p>Exclusivamente para procesar tu pedido, coordinar el pago y la entrega, y contactarte por WhatsApp o Telegram sobre el estado de tu compra.</p>
+
+    <h2>Dónde se almacena</h2>
+    <p>Tus datos de pedido se guardan en una base de datos privada administrada por Musaraña. No vendemos ni compartimos tu información con terceros para fines distintos a completar tu compra.</p>
+
+    <h2>Cookies y píxeles de seguimiento publicitario</h2>
+    <p>
+      Este sitio usa el Pixel de Meta (Facebook/Instagram) y el Pixel de TikTok para medir el
+      rendimiento de nuestros anuncios y mostrarte publicidad más relevante. Estos píxeles registran
+      tu navegación en el sitio (qué productos ves, qué agregas al carrito) mediante cookies del
+      navegador. Puedes bloquear estas cookies desde la configuración de tu navegador si lo prefieres.
+    </p>
+
+    <h2>Tus derechos (Habeas Data)</h2>
+    <p>
+      De acuerdo con la Ley 1581 de 2012, puedes solicitar en cualquier momento acceder, corregir
+      o eliminar tus datos personales almacenados, escribiéndonos a
+      <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .seccion-texto { padding: var(--espaciado-seccion) 1.5rem; max-width: 760px; margin: 0 auto; }
+  .nota-editable {
+    background: var(--color-acento-3);
+    border: 2px solid var(--color-borde);
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    margin: 1rem 0 2rem;
+  }
+  h2 { margin-top: 2rem; }
+</style>

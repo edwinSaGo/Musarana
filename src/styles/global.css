@@ -30,6 +30,10 @@
 }
 
 * { box-sizing: border-box; }
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* refuerzo defensivo: nada puede generar scroll horizontal, incluyendo el panel del menú móvil */
+}
 
 html {
   scroll-behavior: smooth;

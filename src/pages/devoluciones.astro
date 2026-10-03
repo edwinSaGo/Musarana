@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// =========================================================================
+// EDITA AQUÍ los valores específicos de tu política de devoluciones.
+// =========================================================================
+const DIAS_RETRACTO = 5; // días hábiles, mínimo legal en Colombia para ventas a distancia
+const QUIEN_PAGA_ENVIO_DEVOLUCION = 'el cliente'; // o 'Musaraña', ajústalo a tu decisión
+const CORREO_CONTACTO = 'tu-correo@ejemplo.com'; // reemplaza por tu correo real
+// =========================================================================
+---
+<Layout title="Devoluciones y cambios">
+  <section class="contenedor seccion-texto">
+    <p class="eyebrow">Musaraña</p>
+    <h1>Política de devoluciones y cambios</h1>
+    <p class="nota-editable">⚠️ Plantilla de referencia — revisa los valores marcados como editables arriba, y considera que un profesional revise el texto legal antes de publicarlo.</p>
+
+    <h2>Derecho de retracto</h2>
+    <p>
+      Tienes <strong>{DIAS_RETRACTO} días hábiles</strong> desde que recibes tu pedido para solicitar
+      la devolución, sin necesidad de justificar el motivo, de acuerdo con la Ley 1480 de 2011
+      (Estatuto del Consumidor) para ventas a distancia en Colombia.
+    </p>
+    <p>
+      <em>Nota: si alguno de tus productos se fabrica a la medida o por encargo personalizado para
+      cada cliente, ese producto específico queda excluido del derecho de retracto por ley — confirma
+      esto con un asesor legal si aplica a tu catálogo.</em>
+    </p>
+
+    <h2>Condiciones para devolver un producto</h2>
+    <ul>
+      <li>El producto debe estar sin usar, con sus etiquetas originales.</li>
+      <li>Debe devolverse en su empaque original cuando sea posible.</li>
+      <li>El comprobante de compra (número de pedido) debe acompañar la solicitud.</li>
+    </ul>
+
+    <h2>Costos de envío de la devolución</h2>
+    <p>Los costos de envío para devolver el producto corren por cuenta de <strong>{QUIEN_PAGA_ENVIO_DEVOLUCION}</strong>.</p>
+
+    <h2>Cómo solicitar una devolución o cambio</h2>
+    <p>
+      Escríbenos por WhatsApp o al correo <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a>
+      indicando tu número de pedido y el motivo. Te confirmamos los siguientes pasos en menos de 48 horas.
+    </p>
+
+    <h2>Garantía legal</h2>
+    <p>
+      Todos los productos cuentan con garantía legal frente a defectos de fabricación, independientemente
+      de si venció o no el plazo de retracto.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .seccion-texto { padding: var(--espaciado-seccion) 1.5rem; max-width: 760px; margin: 0 auto; }
+  .nota-editable {
+    background: var(--color-acento-3);
+    border: 2px solid var(--color-borde);
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    margin: 1rem 0 2rem;
+  }
+  h2 { margin-top: 2rem; }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+</style>

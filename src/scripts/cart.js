@@ -407,9 +407,58 @@ function initMenuMovil() {
 }
 
 // ---------------------------------------------------------------------
+// AUDIO DE FONDO — se activa con la primera interacción del visitante
+// (los navegadores bloquean el autoplay con sonido sin un gesto del usuario).
+// Si el visitante lo silencia, se recuerda su preferencia en este navegador.
+// ---------------------------------------------------------------------
+function initAudioAmbiente() {
+  const audio = document.getElementById('audio-ambiente');
+  const boton = document.getElementById('btn-audio');
+  if (!audio || !boton) return;
+
+  const CLAVE_MUTE = 'musarana_audio_silenciado';
+  let iniciado = false;
+
+  function actualizarBoton(sonando) {
+    boton.textContent = sonando ? '🔊' : '🔇';
+    boton.setAttribute('aria-pressed', String(sonando));
+  }
+
+  function intentarReproducir() {
+    if (iniciado) return;
+    if (localStorage.getItem(CLAVE_MUTE) === 'true') return; // el visitante ya lo había silenciado
+    iniciado = true;
+    audio.play().then(() => actualizarBoton(true)).catch(() => {
+      // el navegador igual bloqueó el autoplay; el botón manual sigue disponible
+      iniciado = false;
+    });
+  }
+
+  // Primera interacción en cualquier parte de la página
+  ['click', 'touchstart', 'keydown'].forEach(evento => {
+    document.addEventListener(evento, intentarReproducir, { once: true, passive: true });
+  });
+
+  boton.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play().then(() => {
+        iniciado = true;
+        localStorage.removeItem(CLAVE_MUTE);
+        actualizarBoton(true);
+      }).catch(() => {});
+    } else {
+      audio.pause();
+      localStorage.setItem(CLAVE_MUTE, 'true');
+      actualizarBoton(false);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   actualizarContadorCarrito();
   initMenuMovil();
+  initAudioAmbiente();
   initPaginaProducto();
   initPaginaCarrito();
 });

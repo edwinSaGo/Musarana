@@ -5,11 +5,12 @@ import { getCatalogo } from '../lib/catalogo.js';
 // =========================================================================
 // EDITA AQUÍ tus datos de contacto y redes sociales — se usan en todo el sitio.
 // =========================================================================
-const WHATSAPP_TIENDA = '573173020116';
-const INSTAGRAM_URL = 'https://instagram.com/musaranastyle'; 
-const TIKTOK_URL = 'https://tiktok.com/@musaranastyle'; 
+const WHATSAPP_TIENDA = '573173020116'; // número de la tienda, con indicativo de país, sin +, espacios ni guiones
+const INSTAGRAM_URL = 'https://instagram.com/musaranastyle'; // placeholder, reemplaza por el real
+const TIKTOK_URL = 'https://tiktok.com/@musaranastyle'; // placeholder, reemplaza por el real
 const META_PIXEL_ID = 'TU_META_PIXEL_ID'; // el Pixel ID de Meta Events Manager (número largo)
-const TIKTOK_PIXEL_ID = 'DAULOCJC77UA36CC70B0';
+const TIKTOK_PIXEL_ID = 'DAULOCJC77UA36CC70B0'; // Pixel ID real de TikTok Events Manager
+const AUDIO_AMBIENTE = '/audio/ambiente.mp3'; // coloca tu archivo en public/audio/ambiente.mp3
 // =========================================================================
 
 const { title = 'Musaraña', descripcion = 'Ropa, accesorios y objetos con actitud.' } = Astro.props;
@@ -92,6 +93,12 @@ const catalogo = await getCatalogo();
       <div>
         <p class="eyebrow">Musaraña © {new Date().getFullYear()}</p>
         <p>Los pedidos se confirman por transferencia manual — te contactamos por WhatsApp/Telegram para coordinar el pago.</p>
+        <nav class="enlaces-legales">
+          <a href="/">Inicio</a>
+          <a href="/devoluciones/">Devoluciones y cambios</a>
+          <a href="/privacidad/">Privacidad</a>
+          <a href="/contacto/">Contacto</a>
+        </nav>
       </div>
       <div class="redes-sociales">
         <a href={INSTAGRAM_URL} target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
@@ -110,6 +117,11 @@ const catalogo = await getCatalogo();
   >
     💬
   </a>
+
+  <audio id="audio-ambiente" src={AUDIO_AMBIENTE} loop preload="none"></audio>
+  <button id="btn-audio" class="btn-audio-toggle" aria-label="Activar o silenciar el sonido" aria-pressed="false">
+    🔇
+  </button>
 
   <div id="modal-upsell" class="modal-overlay" hidden></div>
   <div id="modal-tallas" class="modal-overlay" hidden></div>
@@ -222,8 +234,9 @@ const catalogo = await getCatalogo();
       transition: transform 0.28s ease;
       z-index: 40;
       overflow-y: auto;
+      pointer-events: none;
     }
-    .nav-categorias.abierta { transform: translateX(0); }
+    .nav-categorias.abierta { transform: translateX(0); pointer-events: auto; }
     .nav-categorias a {
       width: 100%;
       padding: 0.9em 0;
@@ -277,6 +290,33 @@ const catalogo = await getCatalogo();
     font-size: 0.8rem;
     border-bottom: 2px solid var(--color-acento-2);
     padding: 0.3em 0;
+  }
+  .enlaces-legales {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+  }
+  .enlaces-legales a { text-decoration: underline; opacity: 0.75; }
+  .enlaces-legales a:hover { opacity: 1; }
+
+  .btn-audio-toggle {
+    position: fixed;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    right: calc(5.2rem + env(safe-area-inset-right, 0px));
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    background: var(--color-blanco);
+    color: var(--color-negro);
+    border: 3px solid var(--color-borde);
+    font-size: 1.2rem;
+    z-index: 30;
+    cursor: pointer;
+  }
+  @media (max-width: 500px) {
+    .btn-audio-toggle { right: calc(4.6rem + env(safe-area-inset-right, 0px)); width: 2.6rem; height: 2.6rem; }
   }
   .whatsapp-flotante {
     position: fixed;

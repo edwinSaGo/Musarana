@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCatalogo } from '../lib/catalogo.js';
+
+// =========================================================================
+const WHATSAPP_TIENDA = '573173020116';
+const INSTAGRAM_URL = 'https://instagram.com/tu_usuario';
+const TIKTOK_URL = 'https://tiktok.com/@tu_usuario';
+const CORREO_CONTACTO = 'tu-correo@ejemplo.com';
+// =========================================================================
+
+const catalogo = await getCatalogo();
+const direccionPuntoFisico = catalogo.config?.direccion_punto_fisico || '';
+const horarioRecogida = catalogo.config?.horario_recogida || '';
+---
+<Layout title="Contacto">
+  <section class="contenedor seccion-texto">
+    <p class="eyebrow">Musaraña</p>
+    <h1>Contacto</h1>
+
+    <div class="tarjeta-contacto">
+      <p>💬 <strong>WhatsApp:</strong> <a href={`https://wa.me/${WHATSAPP_TIENDA}`} target="_blank" rel="noopener">{WHATSAPP_TIENDA}</a></p>
+      <p>📧 <strong>Correo:</strong> <a href={`mailto:${CORREO_CONTACTO}`}>{CORREO_CONTACTO}</a></p>
+      <p>📷 <strong>Instagram:</strong> <a href={INSTAGRAM_URL} target="_blank" rel="noopener">{INSTAGRAM_URL}</a></p>
+      <p>🎵 <strong>TikTok:</strong> <a href={TIKTOK_URL} target="_blank" rel="noopener">{TIKTOK_URL}</a></p>
+      {direccionPuntoFisico && <p>📍 <strong>Punto físico:</strong> {direccionPuntoFisico}</p>}
+      {horarioRecogida && <p>🕐 <strong>Horario:</strong> {horarioRecogida}</p>}
+    </div>
+
+    <p>¿Tienes una pregunta antes de comprar? Escríbenos por WhatsApp — normalmente respondemos el mismo día.</p>
+  </section>
+</Layout>
+
+<style>
+  .seccion-texto { padding: var(--espaciado-seccion) 1.5rem; max-width: 760px; margin: 0 auto; }
+  .tarjeta-contacto {
+    border: var(--grosor-borde) solid var(--color-borde);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .tarjeta-contacto p { margin: 0.6em 0; }
+</style>
